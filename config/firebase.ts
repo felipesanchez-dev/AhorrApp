@@ -1,9 +1,8 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp } from "firebase/app";
 // @ts-ignore
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getFirestore } from 'firebase/firestore';
-
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getFirestore } from "firebase/firestore";
 import {
   EXPO_FIREBASE_API_KEY,
   EXPO_FIREBASE_AUTH_DOMAIN,
@@ -11,7 +10,7 @@ import {
   EXPO_FIREBASE_STORAGE_BUCKET,
   EXPO_FIREBASE_MESSAGING_SENDER_ID,
   EXPO_FIREBASE_APP_ID,
-} from '@env';
+} from "@env";
 
 const firebaseConfig = {
   apiKey: EXPO_FIREBASE_API_KEY,
