@@ -22,7 +22,7 @@ const Profile = () => {
   const accountOptions: accountOptionType[] = [
     {
       title: "Editar perfil",
-      icon: <Icons.UserIcon size={26} color={colors.white} weight="fill" />,
+      icon: <Icons.UserIcon size={26} color={colors.white} weight="bold" />,
       bgColor: "#6366f1",
       routeName: "/(modals)/profileModal",
     },
@@ -34,7 +34,7 @@ const Profile = () => {
     },
     {
       title: "Politicas de privacidad",
-      icon: <Icons.LockIcon size={26} color={colors.white} weight="fill" />,
+      icon: <Icons.LockIcon size={26} color={colors.white} weight="bold" />,
       bgColor: "#6366f1",
       // routeName: "/(modals)/profileModal",
     },
@@ -50,33 +50,25 @@ const Profile = () => {
       bgColor: "#2ecc71",
       routeName: "/",
     },
-     {
+    {
       title: "Creditos al desarrollador",
-      icon: (
-        <Icons.HeartIcon
-          size={26}
-          color={colors.white}
-          weight="bold"
-        />
-      ),
+      icon: <Icons.HeartIcon size={26} color={colors.white} weight="fill" />,
       bgColor: "#380091ff",
-      routeName: "/",
+      routeName: "/(modals)/credits",
     },
     {
       title: "Cerrar sesión",
-      icon: <Icons.SignOutIcon size={26} color={colors.white} weight="fill" />,
+      icon: <Icons.SignOutIcon size={26} color={colors.white} weight="bold" />,
       bgColor: "#dc2626",
-      // routeName: "/(modals)/profileModal",
     },
   ];
 
   const handlePress = async (item: accountOptionType) => {
     if (item.title === "Cerrar sesión") {
       showLogoutAlert();
-    };
+    }
 
-    if(item.routeName) router.push(item.routeName);
-
+    if (item.routeName) router.push(item.routeName);
   };
 
   const showLogoutAlert = () => {
@@ -86,7 +78,6 @@ const Profile = () => {
       [
         {
           text: "Cancelar",
-          onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
         {

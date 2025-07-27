@@ -1,5 +1,4 @@
 import { CategoryType, ExpenseCategoriesType } from "@/types";
-import { colors } from "./theme";
 
 import * as Icons from "phosphor-react-native";
 
@@ -7,19 +6,19 @@ export const expenseCategories: ExpenseCategoriesType = {
   groceries: {
     label: "Groceries",
     value: "groceries",
-    icon: Icons.ShoppingCart,
+    icon: Icons.ShoppingCartIcon,
     bgColor: "#4B5563",
   },
   rent: {
     label: "Rent",
     value: "rent",
-    icon: Icons.House,
+    icon: Icons.HouseIcon,
     bgColor: "#075985",
   },
   utilities: {
     label: "Utilities",
     value: "utilities",
-    icon: Icons.Lightbulb,
+    icon: Icons.LightbulbIcon,
     bgColor: "#ca8a04",
   },
   transportation: {
@@ -31,49 +30,49 @@ export const expenseCategories: ExpenseCategoriesType = {
   entertainment: {
     label: "Entertainment",
     value: "entertainment",
-    icon: Icons.FilmStrip,
+    icon: Icons.FilmStripIcon,
     bgColor: "#0f766e",
   },
   dining: {
     label: "Dining",
     value: "dining",
-    icon: Icons.ForkKnife,
+    icon: Icons.ForkKnifeIcon,
     bgColor: "#be185d",
   },
   health: {
     label: "Health",
     value: "health",
-    icon: Icons.Heart,
+    icon: Icons.HeartIcon,
     bgColor: "#e11d48",
   },
   insurance: {
     label: "Insurance",
     value: "insurance",
-    icon: Icons.ShieldCheck,
+    icon: Icons.ShieldCheckIcon,
     bgColor: "#404040",
   },
   savings: {
     label: "Savings",
     value: "savings",
-    icon: Icons.PiggyBank,
+    icon: Icons.PiggyBankIcon,
     bgColor: "#065F46",
   },
   clothing: {
     label: "Clothing",
     value: "clothing",
-    icon: Icons.TShirt,
+    icon: Icons.TShirtIcon,
     bgColor: "#7c3aed",
   },
   personal: {
     label: "Personal",
     value: "personal",
-    icon: Icons.User,
+    icon: Icons.UserIcon,
     bgColor: "#a21caf",
   },
   others: {
     label: "Others",
     value: "others",
-    icon: Icons.DotsThreeOutline,
+    icon: Icons.DotsThreeOutlineIcon,
     bgColor: "#525252",
   },
 };
@@ -81,7 +80,7 @@ export const expenseCategories: ExpenseCategoriesType = {
 export const incomeCategory: CategoryType = {
   label: "Income",
   value: "income",
-  icon: Icons.CurrencyDollarSimple,
+  icon: Icons.CurrencyDollarSimpleIcon,
   bgColor: "#16a34a",
 };
 

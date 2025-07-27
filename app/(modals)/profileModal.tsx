@@ -16,6 +16,7 @@ import Button from "@/components/ui/Button";
 import { useAuth } from "@/contexts/authContext";
 import { updateUser } from "@/service/userService";
 import { useRouter } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
 
 const ProfileModal = () => {
   const { user, updateUserData } = useAuth();
@@ -52,6 +53,19 @@ const ProfileModal = () => {
     }
     console.log("User data updated:", name, image);
   };
+  const onPickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      // allowsEditing: true, // Uncomment if you want to allow editing
+      aspect: [4, 3],
+      quality: 0,
+    });
+
+    if (!result.canceled) {
+      setUserData({ ...userData, image: result.assets[0] });
+      console.log("Image picker result:", result.assets[0]);
+    }
+  };
 
   return (
     <ModalWrapper>
@@ -69,7 +83,7 @@ const ProfileModal = () => {
               contentFit="cover"
               transition={100}
             />
-            <TouchableOpacity style={styles.editIcon}>
+            <TouchableOpacity onPress={onPickImage} style={styles.editIcon}>
               <Icons.PencilIcon
                 size={scale(20)}
                 color={colors.neutral800}
