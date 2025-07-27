@@ -78,9 +78,13 @@ const Index = () => {
       ]),
     ]);
 
-    animationSequence.start(() => {
-      if (isFirstTime === null) return;
+    animationSequence.start();
+  }, [router, scaleAnim, opacityAnim, rotateAnim, bounceAnim]);
 
+  useEffect(() => {
+    if (isFirstTime === null) return;
+
+    const navigate = () => {
       if (isFirstTime) {
         router.replace("/(auth)/welcome");
       } else if (user) {
@@ -88,16 +92,12 @@ const Index = () => {
       } else {
         router.replace("/(auth)/login");
       }
-    });
-  }, [
-    router,
-    scaleAnim,
-    opacityAnim,
-    rotateAnim,
-    bounceAnim,
-    user,
-    isFirstTime,
-  ]);
+    };
+
+    const timer = setTimeout(navigate, 2000);
+
+    return () => clearTimeout(timer);
+  }, [isFirstTime, user, router]);
 
   const rotate = rotateAnim.interpolate({
     inputRange: [0, 1],

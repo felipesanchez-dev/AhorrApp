@@ -261,7 +261,20 @@ const Login = () => {
     const res = await loginUser(email, password);
     setIsLoading(false);
     if (!res.success) {
-      return alert(res.msg || "Error al iniciar sesión");
+      if (res.msg?.includes("user-not-found")) {
+        setEmailError("El correo electrónico no está registrado.");
+        setShowEmailError(true);
+        animateErrorIn(emailErrorAnim);
+      } else if (res.msg?.includes("wrong-password")) {
+        setPasswordError("La contraseña es incorrecta.");
+        setShowPasswordError(true);
+        animateErrorIn(passwordErrorAnim);
+      } else {
+        // Generic error for other cases
+        setEmailError(res.msg || "Error al iniciar sesión");
+        setShowEmailError(true);
+        animateErrorIn(emailErrorAnim);
+      }
     }
   };
 

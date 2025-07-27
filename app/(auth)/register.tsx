@@ -85,7 +85,17 @@ const Register = () => {
     setIsLoading(false);
 
     if (!res.success) {
-      Alert.alert("Error de Registro", res.msg);
+      if (res.msg?.includes("email-already-in-use")) {
+        setErrors((prev) => ({
+          ...prev,
+          email: "El correo electrónico ya está en uso.",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          name: res.msg || "Error al registrarse",
+        }));
+      }
     }
   };
 
