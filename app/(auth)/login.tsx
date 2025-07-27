@@ -10,7 +10,6 @@ import React, { useRef, useState, useEffect } from "react";
 import ScreenWrapper from "@/components/layout/ScreenWrapper";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
-import BackButton from "@/components/ui/BackButton";
 import Typo from "@/components/ui/Typo";
 import Input from "@/components/ui/Input";
 import * as Icons from "phosphor-react-native";
@@ -270,7 +269,6 @@ const Login = () => {
         setShowPasswordError(true);
         animateErrorIn(passwordErrorAnim);
       } else {
-        // Generic error for other cases
         setEmailError(res.msg || "Error al iniciar sesión");
         setShowEmailError(true);
         animateErrorIn(emailErrorAnim);
