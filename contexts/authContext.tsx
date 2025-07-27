@@ -34,16 +34,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       router.replace("/(tabs)");
       return { success: true };
     } catch (error: any) {
-      let msg = error.message;
-      if (msg.includes("auth/user-not-found")) {
-        msg =
-          "Usuario no encontrado. Por favor, verifica tu correo electrónico.";
-      } else if (msg.includes("auth/wrong-password")) {
-        msg = "Contraseña incorrecta. Por favor, inténtalo de nuevo.";
-      }
       return {
         success: false,
-        msg,
+        msg: error.message,
       };
     }
   };
@@ -63,11 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       router.replace("/(tabs)");
       return { success: true };
     } catch (error: any) {
-      let msg = error.message;
-      if (msg.includes("auth/email-already-in-use")) {
-        msg = "Este correo electrónico ya está en uso.";
-      }
-      return { success: false, msg };
+      return { success: false, msg: error.message };
     }
   };
 
