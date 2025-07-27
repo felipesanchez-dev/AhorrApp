@@ -76,13 +76,15 @@ const ProfileModal = () => {
           style={{ marginBottom: spacingY._10 }}
         />
         <ScrollView contentContainerStyle={styles.form}>
-          <View style={styles.avatarContainer}>
-            <Image
-              style={styles.avatar}
-              source={getProfileImage(userData.image)}
-              contentFit="cover"
-              transition={100}
-            />
+          <View style={styles.avatarContainer} >
+            <TouchableOpacity onPress={onPickImage} activeOpacity={0.8}>
+              <Image
+                style={styles.avatar}
+                source={getProfileImage(userData.image)}
+                contentFit="cover"
+                transition={100}
+              />
+            </TouchableOpacity>
             <TouchableOpacity onPress={onPickImage} style={styles.editIcon}>
               <Icons.PencilIcon
                 size={scale(20)}
