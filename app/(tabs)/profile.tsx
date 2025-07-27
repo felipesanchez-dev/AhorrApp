@@ -50,6 +50,18 @@ const Profile = () => {
       bgColor: "#2ecc71",
       routeName: "/",
     },
+     {
+      title: "Creditos al desarrollador",
+      icon: (
+        <Icons.HeartIcon
+          size={26}
+          color={colors.white}
+          weight="bold"
+        />
+      ),
+      bgColor: "#380091ff",
+      routeName: "/",
+    },
     {
       title: "Cerrar sesión",
       icon: <Icons.SignOutIcon size={26} color={colors.white} weight="fill" />,
