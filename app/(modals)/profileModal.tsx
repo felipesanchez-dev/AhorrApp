@@ -51,19 +51,16 @@ const ProfileModal = () => {
     } else {
       Alert.alert("Error", response.msg);
     }
-    console.log("User data updated:", name, image);
   };
   const onPickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
-      // allowsEditing: true, // Uncomment if you want to allow editing
       aspect: [4, 3],
       quality: 0,
     });
 
     if (!result.canceled) {
       setUserData({ ...userData, image: result.assets[0] });
-      console.log("Image picker result:", result.assets[0]);
     }
   };
 
