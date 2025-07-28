@@ -1,11 +1,20 @@
+// WARNING: Storing API keys and secrets on the client-side is a significant security risk.
+// These credentials can be easily extracted from the app, giving an attacker full access
+// to your Cloudinary account. For production applications, you should always perform
+// authenticated API calls, like deleting images, from a secure backend server where
+// credentials can be kept safe.
+
 import {
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
   CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_UPLOAD_PRESET,
 } from "@/constants/cloudinary";
 import { ResponseType } from "@/types";
 import axios from "axios";
+import sha1 from "crypto-js/sha1";
 
-const CLOUDINARY_API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+const CLOUDINARY_API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}`;
 
 export const uploadFileToCloudinary = async (
   file: { uri?: string } | string,
@@ -39,11 +48,15 @@ export const uploadFileToCloudinary = async (
       formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
       formData.append("folder", folderName);
 
-      const response = await axios.post(CLOUDINARY_API_URL, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `${CLOUDINARY_API_URL}/image/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       return { success: true, data: response?.data?.secure_url };
     }
@@ -53,6 +66,40 @@ export const uploadFileToCloudinary = async (
     return {
       success: false,
       msg: error.message || "Failed to upload file",
+    };
+  }
+};
+
+export const deleteFileFromCloudinary = async (
+  imageUrl: string
+): Promise<ResponseType> => {
+  try {
+    const publicId = imageUrl.split("/").slice(-2).join("/").split(".")[0];
+    const timestamp = Math.floor(Date.now() / 1000);
+    const signature = sha1(
+      `public_id=${publicId}&timestamp=${timestamp}${CLOUDINARY_API_SECRET}`
+    ).toString();
+
+    const formData = new FormData();
+    formData.append("public_id", publicId);
+    formData.append("timestamp", timestamp.toString());
+    formData.append("api_key", CLOUDINARY_API_KEY);
+    formData.append("signature", signature);
+
+    const response = await axios.post(
+      `${CLOUDINARY_API_URL}/image/destroy`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    return {
+      success: false,
+      msg: error.message || "Failed to delete file",
     };
   }
 };
