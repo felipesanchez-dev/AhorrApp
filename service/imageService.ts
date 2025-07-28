@@ -25,7 +25,7 @@ export const uploadFileToCloudinary = async (
       const extension = filename.split(".").pop()?.toLowerCase();
 
       const mimeTypes: { [key: string]: string } = {
-        jpg: "image/jpeg",
+        jpg: "image/jpg",
         jpeg: "image/jpeg",
         png: "image/png",
         webp: "image/webp",
