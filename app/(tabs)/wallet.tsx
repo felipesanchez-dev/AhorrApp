@@ -36,7 +36,7 @@ const wallet = () => {
               <Icons.PlusCircleIcon
                 size={verticalScale(20)}
                 weight="bold"
-                color={colors.white}
+                color={colors.primary}
               />
             </TouchableOpacity>
           </View>
