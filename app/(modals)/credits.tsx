@@ -166,7 +166,7 @@ const Credits = () => {
     <ModalWrapper>
       <SafeAreaView style={styles.safeArea}>
         <Header
-          title="Felipe - Desarrollador"
+          title="Desarrollado por:"
           headerStyle={{ backgroundColor: colors.neutral900 }}
           headerTintColor={colors.neutral50}
           headerLeft={() => <BackButton />}
