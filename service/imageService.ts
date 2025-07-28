@@ -1,9 +1,3 @@
-// WARNING: Storing API keys and secrets on the client-side is a significant security risk.
-// These credentials can be easily extracted from the app, giving an attacker full access
-// to your Cloudinary account. For production applications, you should always perform
-// authenticated API calls, like deleting images, from a secure backend server where
-// credentials can be kept safe.
-
 import {
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,

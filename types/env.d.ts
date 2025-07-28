@@ -7,4 +7,6 @@ declare module '@env' {
   export const EXPO_FIREBASE_APP_ID: string;
   export const EXPO_CLOUDINARY_CLOUD_NAME: string;
   export const EXPO_CLOUDINARY_UPLOAD_PRESET: string;
+  export const EXPO_CLOUDINARY_API_KEY: string;
+  export const EXPO_CLOUDINARY_API_SECRET: string;
 }
