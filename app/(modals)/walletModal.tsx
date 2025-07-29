@@ -1,5 +1,5 @@
 import { Alert, ScrollView, StyleSheet } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
 import ModalWrapper from "@/components/shared/ModalWrapper";
@@ -11,9 +11,7 @@ import Input from "@/components/ui/Input";
 import { WalletType } from "@/types";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/contexts/authContext";
-import { updateUser } from "@/service/userService";
 import { useRouter } from "expo-router";
-import * as ImagePicker from "expo-image-picker";
 import ImageUpload from "@/components/ui/ImageUpload";
 import { createOrUpdateWallet } from "@/service/walletService";
 
@@ -36,15 +34,14 @@ const WalletModal = () => {
     const data: WalletType = {
       name,
       image,
-      uid: user?.uid
-    }
+      uid: user?.uid,
+    };
     setLoading(true);
     const response = await createOrUpdateWallet(data);
     setLoading(false);
-    console.log("Wallet response:", response); //Debugging line
 
     if (response.success) {
-      router.back();
+      router.push("/(tabs)/wallet");
     } else {
       Alert.alert("Wallet", response.msg);
     }
