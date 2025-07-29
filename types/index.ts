@@ -140,15 +140,14 @@ export type AuthContextType = {
   setUser: Function;
   login: (
     email: string,
-    password:string
-  ) => Promise<{ success: boolean; code?: string; msg: string }>;
+    password: string
+  ) => Promise<{ success: boolean; msg?: string }>;
   register: (
     email: string,
     password: string,
     name: string
   ) => Promise<{ success: boolean; msg?: string }>;
   updateUserData: (userId: string) => Promise<void>;
-  loading: boolean;
 };
 
 export type ResponseType = {

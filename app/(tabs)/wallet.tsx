@@ -16,7 +16,7 @@ import WalletListItem from "@/components/WalletListItem";
 import { LinearGradient } from "expo-linear-gradient";
 import AnimatedBalance from "@/components/ui/AnimatedBalance";
 
-const Wallet = () => {
+const wallet = () => {
   const router = useRouter();
   const { user } = useAuth();
 
@@ -127,7 +127,7 @@ const Wallet = () => {
   );
 };
 
-export default Wallet;
+export default wallet;
 
 const styles = StyleSheet.create({
   gradient: {

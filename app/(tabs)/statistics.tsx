@@ -1,13 +1,11 @@
 import { StyleSheet, Text } from "react-native";
 import React from "react";
 import ScreenWrapper from "@/components/layout/ScreenWrapper";
-import LoadingSpecial from "@/components/ui/Loadingspecial";
 
 const statistics = () => {
   return (
     <ScreenWrapper style={styles.container}>
       <Text style={styles.text}>statistics</Text>
-      <LoadingSpecial />
     </ScreenWrapper>
   );
 };

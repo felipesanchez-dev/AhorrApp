@@ -7,6 +7,9 @@ module.exports = defineConfig([
   expoConfig,
   {
     ignores: ['dist/*'],
+    plugins: {
+      import: require('eslint-plugin-import'),
+    },
     rules: {
       'import/no-unresolved': 'off',
     },

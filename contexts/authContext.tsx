@@ -15,18 +15,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<UserType | null>(null);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
-      setLoading(true);
       if (firebaseUser) {
         updateUserData(firebaseUser.uid);
       } else {
         setUser(null);
       }
-      setLoading(false);
     });
     return () => unsub();
   }, []);
@@ -89,7 +86,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     login,
     register,
     updateUserData,
-    loading,
   };
 
   return (
