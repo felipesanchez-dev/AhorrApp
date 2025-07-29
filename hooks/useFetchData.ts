@@ -39,9 +39,10 @@ const useFetchData = <T>(
 
         setData(fetchedData);
         setLoading(false);
+        console.log("Data fetched successfully:", fetchedData); // Debugging line
       },
       (err) => {
-        console.error("Error fetching data:", err);
+        console.error("Error fetching data:", err); // Debugging line
         setError(err.message);
         setLoading(false);
       }
