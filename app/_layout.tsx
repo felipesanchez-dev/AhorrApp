@@ -1,24 +1,35 @@
 import LoadingSpecial from "@/components/ui/Loadingspecial";
 import { AuthProvider, useAuth } from "@/contexts/authContext";
+import { useStorageState } from "@/hooks/useStorageState";
 import { Stack, useRouter, useSegments } from "expo-router";
 import React, { useEffect } from "react";
 
 const MainLayout = () => {
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const { value: hasOpenedApp, loading: storageLoading } =
+    useStorageState("hasOpenedApp");
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
-    if (loading) return;
-    const inTabsGroup = segments[0] === "(tabs)";
-    if (user && !inTabsGroup) {
-      router.replace("/(tabs)");
-    } else if (!user && inTabsGroup) {
-      router.replace("/welcome");
-    }
-  }, [user, loading]);
+    const inAuthGroup = segments[0] === "(auth)";
 
-  if (loading) {
+    if (authLoading || storageLoading) return;
+
+    if (!user) {
+      if (hasOpenedApp === "true") {
+        router.replace("/(auth)/login");
+      } else {
+        router.replace("/(auth)/welcome");
+      }
+    } else {
+      if (inAuthGroup) {
+        router.replace("/(tabs)");
+      }
+    }
+  }, [user, hasOpenedApp, authLoading, storageLoading, segments]);
+
+  if (authLoading || storageLoading) {
     return <LoadingSpecial />;
   }
 
