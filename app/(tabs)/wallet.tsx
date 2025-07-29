@@ -7,9 +7,20 @@ import { View } from "moti";
 import Typo from "@/components/ui/Typo";
 import * as Icons from "phosphor-react-native";
 import { useRouter } from "expo-router";
+import useFetchData from "@/hooks/useFetchData";
+import { WalletType } from "@/types";
+import { orderBy, where } from "firebase/firestore";
+import { useAuth } from "@/contexts/authContext";
 
 const wallet = () => {
   const router = useRouter();
+  const { user } = useAuth();
+
+  const { data, error, loading } = useFetchData<WalletType>("wallets", [
+    where("uid", "==", user?.uid),
+    orderBy("created", "desc"),
+  ]);
+
   const getTotalBalance = () => {
     return 5000;
   };
@@ -32,15 +43,16 @@ const wallet = () => {
             <Typo size={20} fontWeight={"600"}>
               MIS BILLETERAS
             </Typo>
-            <TouchableOpacity onPress={() => router.push("/(modals)/walletModal")}>
+            <TouchableOpacity
+              onPress={() => router.push("/(modals)/walletModal")}
+            >
               <Icons.PlusCircleIcon
-                size={verticalScale(20)}
-                weight="bold"
+                size={verticalScale(30)}
+                weight="fill"
                 color={colors.primary}
               />
             </TouchableOpacity>
           </View>
-
         </View>
       </View>
     </ScreenWrapper>
