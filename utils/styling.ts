@@ -24,7 +24,6 @@ export const verticalScale = (size: number) =>
     )
   );
 
-// horizontalScale
 export const horizontalScale = (size: number) =>
   Math.round(
     PixelRatio.roundToNearestPixel(

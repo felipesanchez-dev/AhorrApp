@@ -29,7 +29,9 @@ const WalletListItem = ({
         .springify()
         .damping(12)}
     >
-      <TouchableOpacity style={[styles.card, isLongName && styles.cardExpanded]}>
+      <TouchableOpacity
+        style={[styles.card, isLongName && styles.cardExpanded]}
+      >
         {isLongName ? (
           <>
             <View style={styles.topRow}>
@@ -102,18 +104,18 @@ const styles = StyleSheet.create({
     borderColor: colors.neutral800,
   },
   cardExpanded: {
-    flexDirection: 'column',
-    alignItems: 'stretch',
+    flexDirection: "column",
+    alignItems: "stretch",
     gap: spacingY._5,
   },
   topRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacingX._15,
   },
   bottomRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end'
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
   mainContent: {
     flex: 1,

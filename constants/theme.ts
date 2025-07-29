@@ -23,7 +23,7 @@ export const colors = {
   neutral600: "#525252",
   neutral700: "#404040",
   neutral800: "#262626",
-  neutral850: "#1a1a1a", 
+  neutral850: "#1a1a1a",
   neutral900: "#171717",
 };
 
@@ -31,7 +31,7 @@ export const spacingX = {
   _3: scale(3),
   _5: scale(5),
   _7: scale(7),
-  _8: scale(8), 
+  _8: scale(8),
   _10: scale(10),
   _12: scale(12),
   _15: scale(15),
