@@ -12,19 +12,19 @@ const MainLayout = () => {
   const router = useRouter();
 
   useEffect(() => {
+    if (authLoading || storageLoading) {
+      return;
+    }
+
     const inAuthGroup = segments[0] === "(auth)";
 
-    if (authLoading || storageLoading) return;
-
-    if (!user) {
-      if (hasOpenedApp === "true") {
+    if (user && !inAuthGroup) {
+      router.replace("/(tabs)");
+    } else if (!user) {
+      if (hasOpenedApp) {
         router.replace("/(auth)/login");
       } else {
         router.replace("/(auth)/welcome");
-      }
-    } else {
-      if (inAuthGroup) {
-        router.replace("/(tabs)");
       }
     }
   }, [user, hasOpenedApp, authLoading, storageLoading, segments]);
@@ -37,6 +37,8 @@ const MainLayout = () => {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="(modals)/profileModal" />
+      <Stack.Screen name="(modals)/credits" />
+      <Stack.Screen name="(auth)" />
     </Stack>
   );
 };

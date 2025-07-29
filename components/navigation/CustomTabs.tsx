@@ -127,7 +127,7 @@ export default function CustomTabs({
               }}
               transition={{ type: "timing", duration: 250 }}
             >
-             
+              {route.name}
             </MotiText>
           </TouchableOpacity>
         );
