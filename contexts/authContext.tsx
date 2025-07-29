@@ -4,7 +4,6 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signOut,
 } from "firebase/auth";
 import { setDoc, doc, getDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -84,20 +83,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Failed to log out:", error);
-    }
-  };
-
   const contextValue: AuthContextType = {
     user,
     setUser,
     login,
     register,
-    logout,
     updateUserData,
     loading,
   };
