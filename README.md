@@ -1,50 +1,201 @@
-# Welcome to your Expo app 👋
+# AhorrApp 💰
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Expo](https://img.shields.io/badge/Expo-000020?style=for-the-badge&logo=expo&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)
 
-## Get started
+AhorrApp is a personal finance application built with React Native and Expo, designed to help users manage their savings and expenses efficiently. The app features a clean, intuitive interface and leverages modern technologies for a robust and scalable solution.
 
-1. Install dependencies
+## 📖 Table of Contents
 
-   ```bash
-   npm install
-   ```
+- [📦 Technologies Used](#-technologies-used)
+- [🧠 Architecture](#-architecture)
+- [🛠️ Current Project Status](#️-current-project-status)
+- [📈 Roadmap](#-roadmap)
+- [📊 Diagrams](#-diagrams)
+  - [Folder Structure](#folder-structure)
+  - [Authentication Flow](#authentication-flow)
+  - [AI Receipt Scanning Flow (Upcoming)](#ai-receipt-scanning-flow-upcoming)
+- [👨‍💻 How to Contribute](#-how-to-contribute)
+- [🚀 Deployment](#-deployment)
+- [📜 License](#-license)
+- [📧 Contact](#-contact)
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## 📦 Technologies Used
 
-In the output, you'll find options to open the app in a
+This project is built with a modern and powerful tech stack:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **React Native (with Expo):** For cross-platform mobile app development.
+- **Firebase:**
+  - **Authentication:** For user sign-up, sign-in, and session management.
+  - **Firestore:** As the primary database for storing user data.
+- **Cloudinary:** For cloud-based image storage and management (e.g., user profile pictures).
+- **TypeScript:** For a strongly-typed codebase, ensuring code quality and maintainability.
+- **ESLint:** To enforce strict coding standards and identify potential issues early.
+- **Prettier:** For automated code formatting, maintaining a consistent style across the project.
+- **Phosphor React Native Icons:** For a rich set of high-quality icons.
+- **Moti:** For creating smooth and performant animations.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 🧠 Architecture
 
-When you're ready, run:
+The project follows a modular and scalable architecture, organized into distinct folders for clarity and separation of concerns:
 
-```bash
-npm run reset-project
+- **`app/`:** Contains all the screens and navigation logic, following the Expo Router structure.
+  - `(auth)/`: Screens related to authentication (Login, Register).
+  - `(tabs)/`: Main screens of the application after login (Home, Profile, etc.).
+  - `(modals)/`: Modals that can be displayed over other screens.
+- **`components/`:** Reusable UI components (`Input`, `Button`, `ModalWrapper`, etc.).
+- **`services/`:** Modules for interacting with external services like Firebase and Cloudinary.
+- **`contexts/`:** React Context providers, such as the `AuthContext` for managing authentication state globally.
+- **`hooks/`:** Custom hooks to encapsulate and reuse stateful logic.
+- **`types/`:** TypeScript type definitions and interfaces.
+- **`constants/`:** Global constants like theme colors, API keys, etc.
+- **`utils/`:** Utility functions used across the application.
+
+This structure, combined with **TypeScript's strong typing**, ensures that the codebase is clean, maintainable, and easy to scale.
+
+---
+
+## 🛠️ Current Project Status
+
+- [✅] **User Authentication:** Fully implemented sign-up and sign-in flow.
+- [✅] **Basic Profile:** Users can view their name, email, and update their profile picture.
+- [✅] **Image Uploads:** Profile picture uploads are handled by Cloudinary.
+- [✅] **Organized Codebase:** The project structure is well-defined and follows best practices.
+- [✅] **Linting and Formatting:** ESLint and Prettier are configured to ensure code quality.
+- [✅] **Conventional Commits:** All contributions follow the conventional commit standard (`feat:`, `fix:`, `refactor:`, etc.).
+
+---
+
+## 📈 Roadmap
+
+Here are the features and improvements planned for the future:
+
+- [ ] **Complete Profile Screen:** Add more user details and settings.
+- [ ] **Statistics Screen:** Develop a dashboard for financial insights and visualizations.
+- [ ] **Wallet Screen:** Implement functionality to track expenses and savings.
+- [ ] **Improve Home Screen:** Enhance the main dashboard for a better user experience.
+- [ ] **Password Recovery:** Add a "Forgot Password" feature.
+- [ ] **AI-Powered Receipt Scanning:** Integrate an AI model to scan receipts, extract data, and categorize expenses automatically.
+- [ ] **Play Store Integration:** Prepare and deploy the application to the Google Play Store.
+- [ ] **Multi-Currency Support:** Allow users to manage finances in different currencies.
+- [ ] **Custom Financial Goals:** Enable users to set and track personal savings goals.
+
+---
+
+## 📊 Diagrams
+
+### Folder Structure
+
+```
+.
+├── app/
+│   ├── (auth)/
+│   ├── (modals)/
+│   └── (tabs)/
+├── assets/
+│   ├── fonts/
+│   └── images/
+├── components/
+│   ├── layout/
+│   ├── navigation/
+│   ├── shared/
+│   └── ui/
+├── config/
+├── constants/
+├── contexts/
+├── hooks/
+├── scripts/
+├── service/
+├── types/
+└── utils/
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Authentication Flow
 
-## Learn more
+```
+User opens the app
+      │
+      v
+Is user authenticated?
+      ├─ Yes ──> Show Main App (Tabs)
+      └─ No  ──> Show Welcome Screen
+                   │
+                   ├─> Login ──> Success? ──> Main App
+                   │     │
+                   │     └─ Fail? ──> Show error
+                   │
+                   └─> Register ──> Success? ──> Main App
+                         │
+                         └─ Fail? ──> Show error
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### AI Receipt Scanning Flow (Upcoming)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+A diagram detailing the flow of the AI-powered receipt scanning feature will be added here once development begins.
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
+## 👨‍💻 How to Contribute
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+We welcome contributions! To ensure a smooth collaboration, please follow these guidelines:
+
+1.  **Format Your Code:** All code must be formatted with **Prettier** before committing.
+2.  **Follow Linting Rules:** Ensure your code adheres to the **ESLint** rules configured in the project.
+3.  **Use Conventional Commits:** Commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification (e.g., `feat: add new feature`, `fix: resolve a bug`).
+4.  **Write Typed Code:** All new code should be written in **TypeScript** with proper type definitions.
+5.  **Document Components:** Clearly document any new reusable components you create.
+
+---
+
+## 🚀 Deployment
+
+The application is planned for deployment on the **Google Play Store**.
+
+---
+
+## 📜 License
+
+AhorrApp License v1.0
+
+Copyright (c) 2025 Felipe Reyes Sanchez
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to use,
+copy, modify, merge, publish, distribute, and/or sublicense copies of the Software,
+subject to the following conditions:
+
+1.  **Attribution Required** – You must always retain clear and visible credit to the original author, Felipe Reyes Sanchez:
+    - The LICENSE file must not be removed or altered.
+    - Any use, distribution or modification of the app/code must include explicit attribution in both the source code and any user-facing interface (if applicable).
+    - The in-app credits must remain intact and unaltered.
+
+2.  **No Removal of Credit** – You may not remove or obscure any references to the original author, including but not limited to:
+    - README files
+    - About/Credits screens
+    - Metadata or descriptions in app stores
+
+3.  **Modifications** – You are allowed to modify this software for personal or commercial use, but:
+    - You must clearly document any modifications made.
+    - You must not claim the original work as your own.
+
+4.  **Redistribution** – You may distribute modified or unmodified versions of the Software under the same license and attribution terms.
+
+5.  **Warranty Disclaimer** – The software is provided “as is”, without warranty of any kind.
+
+By using, modifying, or distributing this software, you agree to be bound by the terms of this license.
+
+---
+
+## 📧 Contact
+
+**Author:** Felipe Reyes Sanchez
+**Contact:** jfelipe9.121@gmail.com
+**Project:** AhorrApp – App de Finanzas Personales
