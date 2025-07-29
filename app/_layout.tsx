@@ -1,7 +1,7 @@
+import LoadingSpecial from "@/components/ui/Loadingspecial";
 import { AuthProvider, useAuth } from "@/contexts/authContext";
 import { Stack, useRouter, useSegments } from "expo-router";
 import React, { useEffect } from "react";
-import Loading from "@/components/ui/Loading";
 
 const MainLayout = () => {
   const { user, loading } = useAuth();

@@ -36,7 +36,7 @@ const ProfileModal = () => {
   }, [user]);
 
   const onSubmit = async () => {
-    let { name, image } = userData;
+    let { name } = userData;
     if (!name.trim()) {
       Alert.alert("Error", "El nombre no puede estar vacío.");
       return;
