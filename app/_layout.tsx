@@ -19,7 +19,7 @@ const MainLayout = () => {
   }, [user, loading]);
 
   if (loading) {
-    return <Loading />;
+    return <LoadingSpecial />;
   }
 
   return (
