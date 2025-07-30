@@ -4,7 +4,7 @@ import {
   uploadFileToCloudinary,
 } from "./imageService";
 import { firestore } from "@/config/firebase";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 
 export const createOrUpdateWallet = async (
   walletData: Partial<WalletType>
@@ -70,6 +70,34 @@ export const createOrUpdateWallet = async (
         id: walletRef.id,
       },
     };
+  } catch (error: any) {
+    return { success: false, msg: error.message };
+  }
+};
+
+export const deleteWallet = async (walletId: string): Promise<ResponseType> => {
+  try {
+    const walletRef = doc(firestore, "wallets", walletId);
+
+    const walletSnap = await getDoc(walletRef);
+
+    if (!walletSnap.exists()) {
+      return {
+        success: false,
+        msg: "La billetera que intentas eliminar no existe.",
+      };
+    }
+
+    const walletData = walletSnap.data();
+    const imageUrl = walletData.image;
+
+    if (imageUrl && typeof imageUrl === "string") {
+      await deleteFileFromCloudinary(imageUrl);
+    }
+
+    await deleteDoc(walletRef);
+
+    return { success: true, msg: "Billetera eliminada con éxito" };
   } catch (error: any) {
     return { success: false, msg: error.message };
   }

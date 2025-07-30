@@ -13,7 +13,8 @@ import Button from "@/components/ui/Button";
 import { useAuth } from "@/contexts/authContext";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import ImageUpload from "@/components/ui/ImageUpload";
-import { createOrUpdateWallet } from "@/service/walletService";
+import { createOrUpdateWallet, deleteWallet } from "@/service/walletService";
+import * as Icons from "phosphor-react-native";
 
 const WalletModal = () => {
   const { user, updateUserData } = useAuth();
@@ -65,6 +66,37 @@ const WalletModal = () => {
     }
   };
 
+  const onDelete = async () => {
+    if(!oldWallet?.id) return;
+    setLoading(true);
+    const response = await deleteWallet(oldWallet.id);
+    setLoading(false);
+    if(response.success) {
+      router.push("/(tabs)/wallet");
+    } else {
+      Alert.alert("Error", response.msg);
+    }
+  }
+
+  const showDeleteAlert = () => {
+    Alert.alert(
+      "Eliminar Billetera",
+      "¿Estás seguro de que deseas eliminar esta billetera? Esta acción no se puede deshacer.",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+         {
+          text: "Eliminar",
+          onPress: () => onDelete(),
+          style: "destructive",
+        }
+      ]
+    )
+  }
+
   return (
     <ModalWrapper>
       <View style={styles.container}>
@@ -94,6 +126,21 @@ const WalletModal = () => {
         </ScrollView>
       </View>
       <View style={styles.footer}>
+        {oldWallet?.id && (
+          <Button
+            onPress={showDeleteAlert}
+            style={{
+              backgroundColor: colors.rose,
+              paddingHorizontal: spacingX._15,
+            }}
+          >
+            <Icons.TrashIcon
+              color={colors.white}
+              size={verticalScale(24)}
+              weight="bold"
+            />
+          </Button>
+        )}
         <Button onPress={onSubmit} style={{ flex: 1 }} loading={loading}>
           <Typo
             fontWeight="700"
