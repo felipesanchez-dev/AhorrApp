@@ -13,8 +13,8 @@ import { orderBy, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/authContext";
 import Loading from "@/components/ui/Loading";
 import { LinearGradient } from "expo-linear-gradient";
-import AnimatedBalance from "@/components/ui/AnimatedBalance";
 import WalletListItem from "@/components/wallets/WalletListItem";
+import AnimatedBalance from "@/components/wallets/AnimatedBalance";
 
 const wallet = () => {
   const router = useRouter();
