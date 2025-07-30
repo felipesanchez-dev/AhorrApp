@@ -50,7 +50,9 @@ const WalletModal = () => {
       uid: user?.uid,
       id: oldWallet?.id,
     };
-
+    if (oldWallet?.id) {
+      data.id = oldWallet?.id;
+    }
     setLoading(true);
     const response = await createOrUpdateWallet(data);
     setLoading(false);
