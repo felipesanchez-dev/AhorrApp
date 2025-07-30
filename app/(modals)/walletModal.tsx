@@ -126,7 +126,7 @@ const WalletModal = () => {
         </ScrollView>
       </View>
       <View style={styles.footer}>
-        {oldWallet?.id && (
+        {oldWallet?.id && !loading && (
           <Button
             onPress={showDeleteAlert}
             style={{
