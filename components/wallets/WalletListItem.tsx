@@ -5,9 +5,9 @@ import { Router } from "expo-router";
 import { scale, verticalScale } from "@/utils/styling";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { Image } from "expo-image";
-import Typo from "./ui/Typo";
 import * as Icons from "phosphor-react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import Typo from "@/components/ui/Typo";
 
 const WalletListItem = ({
   item,
@@ -22,6 +22,17 @@ const WalletListItem = ({
 }) => {
   const isLongName = item?.name && item.name.length > 20;
 
+  const openWallet = () => {
+    router.push({
+      pathname: "/(modals)/walletModal",
+      params: {
+        id: item?.id,
+        name: item?.name,
+        image: item?.image,
+      },
+    });
+  };
+
   return (
     <Animated.View
       entering={FadeInDown.delay(animationDelay || 0)
@@ -31,6 +42,7 @@ const WalletListItem = ({
     >
       <TouchableOpacity
         style={[styles.card, isLongName && styles.cardExpanded]}
+        onPress={openWallet}
       >
         {isLongName ? (
           <>

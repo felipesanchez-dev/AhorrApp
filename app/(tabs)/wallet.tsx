@@ -12,9 +12,9 @@ import { WalletType } from "@/types";
 import { orderBy, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/authContext";
 import Loading from "@/components/ui/Loading";
-import WalletListItem from "@/components/WalletListItem";
 import { LinearGradient } from "expo-linear-gradient";
 import AnimatedBalance from "@/components/ui/AnimatedBalance";
+import WalletListItem from "@/components/wallets/WalletListItem";
 
 const wallet = () => {
   const router = useRouter();

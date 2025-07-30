@@ -1,5 +1,5 @@
 import { Alert, ScrollView, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
 import ModalWrapper from "@/components/shared/ModalWrapper";
@@ -11,7 +11,7 @@ import Input from "@/components/ui/Input";
 import { WalletType } from "@/types";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/contexts/authContext";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import ImageUpload from "@/components/ui/ImageUpload";
 import { createOrUpdateWallet } from "@/service/walletService";
 
@@ -22,8 +22,20 @@ const WalletModal = () => {
     image: null,
   });
 
+  const oldWallet: { name: string; image: string; id: string } =
+    useLocalSearchParams();
+
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (oldWallet?.id) {
+      setWallet({
+        name: oldWallet.name,
+        image: oldWallet.image ? { uri: oldWallet.image } : null,
+      });
+    }
+  }, [oldWallet?.id, oldWallet?.name, oldWallet?.image]);
 
   const onSubmit = async () => {
     let { name, image } = wallet;
@@ -31,19 +43,22 @@ const WalletModal = () => {
       Alert.alert("Error", "El nombre y la imagen no pueden estar vacíos.");
       return;
     }
-    const data: WalletType = {
+
+    const data = {
       name,
       image,
       uid: user?.uid,
+      id: oldWallet?.id,
     };
+
     setLoading(true);
     const response = await createOrUpdateWallet(data);
     setLoading(false);
 
     if (response.success) {
-      router.push("/(tabs)/wallet");
+      router.back();
     } else {
-      Alert.alert("Wallet", response.msg);
+      Alert.alert("Error", response.msg);
     }
   };
 
@@ -51,7 +66,7 @@ const WalletModal = () => {
     <ModalWrapper>
       <View style={styles.container}>
         <Header
-          title="Nueva Billetera"
+          title={oldWallet?.id ? "Editar Billetera" : "Nueva Billetera"}
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
@@ -59,7 +74,7 @@ const WalletModal = () => {
           <View style={styles.inputContainer}>
             <Typo>Nombre de la billetera:</Typo>
             <Input
-              placeholder={wallet.name}
+              placeholder="Ej: Ahorros, Efectivo"
               value={wallet.name}
               onChangeText={(value) => setWallet({ ...wallet, name: value })}
             />
@@ -82,7 +97,7 @@ const WalletModal = () => {
             style={{ textAlign: "center" }}
             color={colors.black}
           >
-            Crear Billetera
+            {oldWallet?.id ? "Actualizar Billetera" : "Crear Billetera"}
           </Typo>
         </Button>
       </View>
