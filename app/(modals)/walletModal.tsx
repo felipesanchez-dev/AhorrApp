@@ -44,15 +44,16 @@ const WalletModal = () => {
       return;
     }
 
-    const data = {
+    const data: Partial<WalletType> = {
       name,
       image,
       uid: user?.uid,
-      id: oldWallet?.id,
     };
+
     if (oldWallet?.id) {
-      data.id = oldWallet?.id;
+      data.id = oldWallet.id;
     }
+
     setLoading(true);
     const response = await createOrUpdateWallet(data);
     setLoading(false);

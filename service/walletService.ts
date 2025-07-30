@@ -13,7 +13,6 @@ export const createOrUpdateWallet = async (
     let walletToSave = { ...walletData };
     let oldWalletData: Partial<WalletType> | undefined = undefined;
 
-    // If updating, get old wallet data
     if (walletData.id) {
       const oldWalletRef = doc(firestore, "wallets", walletData.id);
       const oldWalletSnap = await getDoc(oldWalletRef);
@@ -22,25 +21,35 @@ export const createOrUpdateWallet = async (
       }
     }
 
-    if (walletData.image && typeof walletData.image !== "string") {
-      const imageUploadRes = await uploadFileToCloudinary(
-        walletData.image,
-        "wallets"
-      );
-      if (!imageUploadRes.success) {
-        return {
-          success: false,
-          msg: imageUploadRes.msg || "Failed to upload wallet icon",
-        };
-      }
-      walletToSave.image = imageUploadRes.data;
+    if (
+      walletData.image &&
+      typeof walletData.image === "object" &&
+      walletData.image.uri
+    ) {
+      if (!walletData.image.uri.startsWith("http")) {
+        const imageUploadRes = await uploadFileToCloudinary(
+          walletData.image,
+          "wallets"
+        );
 
-      //delete old image
-      if (oldWalletData && oldWalletData.image) {
-        await deleteFileFromCloudinary(oldWalletData.image as string);
+        if (!imageUploadRes.success) {
+          return {
+            success: false,
+            msg: imageUploadRes.msg || "Falló la subida del ícono.",
+          };
+        }
+
+        walletToSave.image = imageUploadRes.data;
+
+        if (oldWalletData?.image) {
+          await deleteFileFromCloudinary(oldWalletData.image as string);
+        }
+      } else {
+        walletToSave.image = walletData.image.uri;
       }
     }
-    if (!walletData?.id) {
+
+    if (!walletData.id) {
       walletToSave.amount = 0;
       walletToSave.totalIncome = 0;
       walletToSave.totalExpenses = 0;
@@ -48,13 +57,14 @@ export const createOrUpdateWallet = async (
     }
 
     const walletRef = walletData.id
-      ? doc(firestore, "wallets", walletData?.id)
+      ? doc(firestore, "wallets", walletData.id)
       : doc(collection(firestore, "wallets"));
 
     await setDoc(walletRef, walletToSave, { merge: true });
+
     return {
       success: true,
-      msg: "Wallet saved successfully",
+      msg: "Billetera guardada con éxito",
       data: {
         ...walletToSave,
         id: walletRef.id,
