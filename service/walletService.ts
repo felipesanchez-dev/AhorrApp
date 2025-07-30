@@ -1,15 +1,28 @@
 import { ResponseType, WalletType } from "@/types";
-import { uploadFileToCloudinary } from "./imageService";
+import {
+  deleteFileFromCloudinary,
+  uploadFileToCloudinary,
+} from "./imageService";
 import { firestore } from "@/config/firebase";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 
 export const createOrUpdateWallet = async (
   walletData: Partial<WalletType>
 ): Promise<ResponseType> => {
   try {
     let walletToSave = { ...walletData };
+    let oldWalletData: Partial<WalletType> | undefined = undefined;
 
-    if (walletData.image) {
+    // If updating, get old wallet data
+    if (walletData.id) {
+      const oldWalletRef = doc(firestore, "wallets", walletData.id);
+      const oldWalletSnap = await getDoc(oldWalletRef);
+      if (oldWalletSnap.exists()) {
+        oldWalletData = oldWalletSnap.data();
+      }
+    }
+
+    if (walletData.image && typeof walletData.image !== "string") {
       const imageUploadRes = await uploadFileToCloudinary(
         walletData.image,
         "wallets"
@@ -21,6 +34,11 @@ export const createOrUpdateWallet = async (
         };
       }
       walletToSave.image = imageUploadRes.data;
+
+      //delete old image
+      if (oldWalletData && oldWalletData.image) {
+        await deleteFileFromCloudinary(oldWalletData.image as string);
+      }
     }
     if (!walletData?.id) {
       walletToSave.amount = 0;
