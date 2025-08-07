@@ -1,8 +1,8 @@
-import { Image, StyleSheet, View, Animated, Easing } from "react-native";
-import { useRouter } from "expo-router";
-import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/contexts/authContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { Animated, Easing, Image, StyleSheet, View } from "react-native";
 
 const Index = () => {
   const { user } = useAuth();
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fed429",
+    backgroundColor: "#ffcb0d",
   },
   logoContainer: {
     width: "100%",
