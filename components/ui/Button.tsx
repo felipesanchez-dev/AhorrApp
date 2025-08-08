@@ -1,9 +1,13 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import { colors, radius } from "@/constants/theme";
 import { CustomButtonProps } from "@/types";
-import { radius } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
-import Loading from "./Loading";
+import React from "react";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const Button = ({
   style,
@@ -17,7 +21,13 @@ const Button = ({
       style={[styles.button, style]}
       disabled={loading}
     >
-      {loading ? <Loading /> : children}
+      {loading ? (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <ActivityIndicator color={colors.black} />
+        </View>
+      ) : (
+        children
+      )}
     </TouchableOpacity>
   );
 };
@@ -29,7 +39,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fed429",
     borderRadius: radius._17,
     borderCurve: "continuous",
-    height: verticalScale(50),
+    height: verticalScale(46),
     justifyContent: "center",
     alignItems: "center",
   },

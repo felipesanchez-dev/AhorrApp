@@ -1,21 +1,23 @@
+import ScreenWrapper from "@/components/ComponentLayout/ScreenWrapper";
+import GlassCard from "@/components/shared/GlassCard";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import Typo from "@/components/ui/Typo";
+import { colors, spacingX, spacingY } from "@/constants/theme";
+import { useAuth } from "@/contexts/authContext";
+import { verticalScale } from "@/utils/styling";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
+  ActivityIndicator,
   Animated,
   Easing,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import React, { useRef, useState, useEffect } from "react";
-import { colors, spacingX, spacingY } from "@/constants/theme";
-import { verticalScale } from "@/utils/styling";
-import Typo from "@/components/ui/Typo";
-import Input from "@/components/ui/Input";
-import * as Icons from "phosphor-react-native";
-import { useRouter } from "expo-router";
-import { useAuth } from "@/contexts/authContext";
-import Button from "@/components/ui/Button";
-import ScreenWrapper from "@/components/ComponentLayout/ScreenWrapper";
 
 interface ValidateEmailFn {
   (email: string): string | null;
@@ -59,16 +61,25 @@ const Login = () => {
   const [passwordTouched, setPasswordTouched] = useState(false);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(50)).current;
-  const logoScaleAnim = useRef(new Animated.Value(0.5)).current;
-  const logoRotateAnim = useRef(new Animated.Value(0)).current;
-  const formSlideAnim = useRef(new Animated.Value(30)).current;
+  const slideAnim = useRef(new Animated.Value(24)).current;
+  const logoScaleAnim = useRef(new Animated.Value(0.92)).current;
+  const logoOpacityAnim = useRef(new Animated.Value(0)).current;
+  const formSlideAnim = useRef(new Animated.Value(16)).current;
   const buttonPulseAnim = useRef(new Animated.Value(1)).current;
-  const cardSlideAnim = useRef(new Animated.Value(20)).current;
+  const cardSlideAnim = useRef(new Animated.Value(12)).current;
   const eyeScaleAnim = useRef(new Animated.Value(1)).current;
+
+  const brand = "AhorrApp";
+  const letterAnims = useRef(
+    Array.from({ length: brand.length }, () => new Animated.Value(0))
+  ).current;
+  const [brandWidth, setBrandWidth] = useState(0);
+  const shimmerAnim = useRef(new Animated.Value(0)).current;
 
   const emailErrorAnim = useRef(new Animated.Value(0)).current;
   const passwordErrorAnim = useRef(new Animated.Value(0)).current;
+  const emailShakeAnim = useRef(new Animated.Value(0)).current;
+  const passwordShakeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([
@@ -90,48 +101,60 @@ const Login = () => {
       Animated.parallel([
         Animated.spring(logoScaleAnim, {
           toValue: 1,
-          tension: 100,
-          friction: 8,
+          tension: 120,
+          friction: 12,
           useNativeDriver: true,
         }),
-        Animated.timing(logoRotateAnim, {
+        Animated.timing(logoOpacityAnim, {
           toValue: 1,
-          duration: 1000,
+          duration: 600,
           easing: Easing.out(Easing.cubic),
           useNativeDriver: true,
         }),
       ]).start();
-    }, 200);
+
+      Animated.stagger(
+        40,
+        letterAnims.map((v) =>
+          Animated.timing(v, {
+            toValue: 1,
+            duration: 400,
+            easing: Easing.out(Easing.cubic),
+            useNativeDriver: true,
+          })
+        )
+      ).start();
+    }, 150);
 
     setTimeout(() => {
       Animated.timing(formSlideAnim, {
         toValue: 0,
-        duration: 600,
+        duration: 500,
         easing: Easing.out(Easing.cubic),
         useNativeDriver: true,
       }).start();
-    }, 400);
+    }, 300);
 
     setTimeout(() => {
       Animated.timing(cardSlideAnim, {
         toValue: 0,
-        duration: 600,
+        duration: 400,
         easing: Easing.out(Easing.cubic),
         useNativeDriver: true,
       }).start();
-    }, 600);
+    }, 450);
 
     const pulseAnimation = () => {
       Animated.sequence([
         Animated.timing(buttonPulseAnim, {
-          toValue: 1.02,
-          duration: 1000,
+          toValue: 1.008,
+          duration: 1800,
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
         Animated.timing(buttonPulseAnim, {
           toValue: 1,
-          duration: 1000,
+          duration: 1800,
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
@@ -140,6 +163,17 @@ const Login = () => {
     pulseAnimation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (brandWidth <= 0) return;
+    shimmerAnim.setValue(0);
+    Animated.timing(shimmerAnim, {
+      toValue: 1,
+      duration: 900,
+      easing: Easing.out(Easing.quad),
+      useNativeDriver: true,
+    }).start();
+  }, [brandWidth, shimmerAnim]);
 
   interface AnimateErrorFn {
     (animValue: Animated.Value): void;
@@ -167,6 +201,36 @@ const Login = () => {
       easing: Easing.in(Easing.cubic),
       useNativeDriver: true,
     }).start();
+  };
+
+  const shake = (anim: Animated.Value) => {
+    anim.setValue(0);
+    Animated.sequence([
+      Animated.timing(anim, {
+        toValue: 1,
+        duration: 50,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+      Animated.timing(anim, {
+        toValue: -1,
+        duration: 50,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+      Animated.timing(anim, {
+        toValue: 1,
+        duration: 50,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+      Animated.timing(anim, {
+        toValue: 0,
+        duration: 50,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
 
   interface HandleEmailChangeFn {
@@ -213,6 +277,7 @@ const Login = () => {
       setEmailError(error);
       setShowEmailError(true);
       animateErrorIn(emailErrorAnim);
+      shake(emailShakeAnim);
     }
   };
 
@@ -224,6 +289,7 @@ const Login = () => {
       setPasswordError(error);
       setShowPasswordError(true);
       animateErrorIn(passwordErrorAnim);
+      shake(passwordShakeAnim);
     }
   };
 
@@ -240,6 +306,7 @@ const Login = () => {
         setShowEmailError(true);
         animateErrorIn(emailErrorAnim);
       }
+      shake(emailShakeAnim);
       hasErrors = true;
     }
 
@@ -250,6 +317,7 @@ const Login = () => {
         setShowPasswordError(true);
         animateErrorIn(passwordErrorAnim);
       }
+      shake(passwordShakeAnim);
       hasErrors = true;
     }
 
@@ -264,14 +332,17 @@ const Login = () => {
         setEmailError("El correo electrónico no está registrado.");
         setShowEmailError(true);
         animateErrorIn(emailErrorAnim);
+        shake(emailShakeAnim);
       } else if (res.msg?.includes("wrong-password")) {
         setPasswordError("La contraseña es incorrecta.");
         setShowPasswordError(true);
         animateErrorIn(passwordErrorAnim);
+        shake(passwordShakeAnim);
       } else {
         setEmailError(res.msg || "Error al iniciar sesión");
         setShowEmailError(true);
         animateErrorIn(emailErrorAnim);
+        shake(emailShakeAnim);
       }
     }
   };
@@ -279,24 +350,19 @@ const Login = () => {
   const handlePasswordToggle = () => {
     Animated.sequence([
       Animated.timing(eyeScaleAnim, {
-        toValue: 0.8,
-        duration: 100,
+        toValue: 0.92,
+        duration: 80,
         useNativeDriver: true,
       }),
       Animated.timing(eyeScaleAnim, {
         toValue: 1,
-        duration: 100,
+        duration: 80,
         useNativeDriver: true,
       }),
     ]).start();
 
     setShowPassword(!showPassword);
   };
-
-  const logoRotation = logoRotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
-  });
 
   return (
     <ScreenWrapper>
@@ -315,23 +381,83 @@ const Login = () => {
               style={[
                 styles.logoContainer,
                 {
-                  transform: [
-                    { scale: logoScaleAnim },
-                    { rotate: logoRotation },
-                  ],
+                  opacity: logoOpacityAnim,
+                  transform: [{ scale: logoScaleAnim }],
                 },
               ]}
+              onLayout={(e) => setBrandWidth(e.nativeEvent.layout.width)}
             >
-              <Icons.CurrencyDollarIcon
-                size={verticalScale(28)}
-                color={colors.primary}
-                weight="bold"
-              />
+              <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+                {brand.split("").map((ch, idx) => (
+                  <Animated.Text
+                    key={`${ch}-${idx}`}
+                    style={[
+                      styles.brandText,
+                      {
+                        transform: [
+                          {
+                            translateY: letterAnims[idx].interpolate({
+                              inputRange: [0, 1],
+                              outputRange: [4, 0],
+                            }),
+                          },
+                          {
+                            scale: letterAnims[idx].interpolate({
+                              inputRange: [0, 1],
+                              outputRange: [0.98, 1],
+                            }),
+                          },
+                        ],
+                        opacity: letterAnims[idx].interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0.4, 1],
+                        }),
+                        textShadowColor: colors.primary,
+                        textShadowOffset: { width: 0, height: 0 },
+                        textShadowRadius: 12,
+                      },
+                    ]}
+                  >
+                    {ch}
+                  </Animated.Text>
+                ))}
+                {brandWidth > 0 && (
+                  <Animated.View
+                    pointerEvents="none"
+                    style={[
+                      styles.shimmerBar,
+                      {
+                        width: Math.max(brandWidth * 0.4, 80),
+                        transform: [
+                          {
+                            translateX: shimmerAnim.interpolate({
+                              inputRange: [0, 1],
+                              outputRange: [
+                                -brandWidth * 0.9,
+                                brandWidth * 0.9,
+                              ],
+                            }),
+                          },
+                          { rotate: "10deg" },
+                        ],
+                      },
+                    ]}
+                  >
+                    <LinearGradient
+                      colors={[
+                        "transparent",
+                        "rgba(255,255,255,0.6)",
+                        "transparent",
+                      ]}
+                      start={{ x: 0, y: 0.5 }}
+                      end={{ x: 1, y: 0.5 }}
+                      style={{ flex: 1 }}
+                    />
+                  </Animated.View>
+                )}
+              </View>
             </Animated.View>
-            <Typo size={28} fontWeight="800" style={styles.title}>
-              Ahorrapp
-            </Typo>
-            <Typo size={16} color={colors.textLighter} style={styles.subtitle}>
+            <Typo size={14} color={colors.textLighter} style={styles.subtitle}>
               Tu asistente financiero personal
             </Typo>
           </View>
@@ -344,128 +470,147 @@ const Login = () => {
               },
             ]}
           >
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Correo electrónico</Text>
-              <Input
-                value={email}
-                onChangeText={handleEmailChange}
-                onBlur={handleEmailBlur}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                containerStyle={
-                  showEmailError && emailError
-                    ? { ...styles.inputContainer, ...styles.inputError }
-                    : styles.inputContainer
-                }
-                icon={
-                  <Icons.AtIcon
-                    size={verticalScale(18)}
-                    color={
-                      showEmailError && emailError
-                        ? colors.error
-                        : colors.neutral400
-                    }
-                  />
-                }
-              />
-              {showEmailError && emailError && (
-                <Animated.View
-                  style={[
-                    styles.errorContainer,
-                    {
-                      opacity: emailErrorAnim,
+            <Animated.View style={{ transform: [{ translateY: 0 }] }}>
+              <GlassCard style={styles.glassCard}>
+                <View style={styles.inputGroupGlass}>
+                  <Text style={styles.label}>Correo electrónico</Text>
+                  <Animated.View
+                    style={{
                       transform: [
                         {
-                          translateY: emailErrorAnim.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [-10, 0],
+                          translateX: emailShakeAnim.interpolate({
+                            inputRange: [-1, 1],
+                            outputRange: [-3, 3],
                           }),
                         },
                       ],
-                    },
-                  ]}
-                >
-                  <Icons.WarningCircleIcon
-                    size={verticalScale(14)}
-                    color={colors.error}
-                    weight="fill"
-                  />
-                  <Text style={styles.errorText}>{emailError}</Text>
-                </Animated.View>
-              )}
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Contraseña</Text>
-              <View style={styles.passwordInputContainer}>
-                <Input
-                  value={password}
-                  onChangeText={handlePasswordChange}
-                  onBlur={handlePasswordBlur}
-                  secureTextEntry={!showPassword}
-                  containerStyle={
-                    showPasswordError && passwordError
-                      ? { ...styles.inputContainer, ...styles.inputError }
-                      : styles.inputContainer
-                  }
-                  icon={
-                    <Icons.LockIcon
-                      size={verticalScale(18)}
-                      color={
-                        showPasswordError && passwordError
-                          ? colors.error
-                          : colors.neutral400
+                    }}
+                  >
+                    <Input
+                      value={email}
+                      onChangeText={handleEmailChange}
+                      onBlur={handleEmailBlur}
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      placeholder="Ingresa tu correo"
+                      containerStyle={
+                        showEmailError && emailError
+                          ? {
+                              ...styles.inputContainer,
+                              ...styles.inputError,
+                              ...styles.inputInGlass,
+                            }
+                          : { ...styles.inputContainer, ...styles.inputInGlass }
                       }
                     />
-                  }
-                />
-                <Pressable
-                  style={styles.passwordToggle}
-                  onPress={handlePasswordToggle}
-                >
-                  <Animated.View
-                    style={{ transform: [{ scale: eyeScaleAnim }] }}
-                  >
-                    {showPassword ? (
-                      <Icons.EyeSlashIcon
-                        size={verticalScale(18)}
-                        color={colors.neutral400}
-                      />
-                    ) : (
-                      <Icons.EyeIcon
-                        size={verticalScale(18)}
-                        color={colors.neutral400}
-                      />
-                    )}
                   </Animated.View>
-                </Pressable>
-              </View>
-              {showPasswordError && passwordError && (
-                <Animated.View
-                  style={[
-                    styles.errorContainer,
-                    {
-                      opacity: passwordErrorAnim,
-                      transform: [
+                  {showEmailError && emailError && (
+                    <Animated.View
+                      style={[
+                        styles.errorContainer,
                         {
-                          translateY: passwordErrorAnim.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [-10, 0],
-                          }),
+                          opacity: emailErrorAnim,
+                          transform: [
+                            {
+                              translateY: emailErrorAnim.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [-10, 0],
+                              }),
+                            },
+                          ],
                         },
-                      ],
-                    },
-                  ]}
-                >
-                  <Icons.WarningCircleIcon
-                    size={verticalScale(14)}
-                    color={colors.error}
-                    weight="fill"
-                  />
-                  <Text style={styles.errorText}>{passwordError}</Text>
-                </Animated.View>
-              )}
-            </View>
+                      ]}
+                    >
+                      <Text style={styles.errorText}>{emailError}</Text>
+                    </Animated.View>
+                  )}
+                </View>
+              </GlassCard>
+            </Animated.View>
+
+            <Animated.View
+              style={{ transform: [{ translateY: verticalScale(4) }] }}
+            >
+              <GlassCard style={styles.glassCard}>
+                <View style={styles.inputGroupGlass}>
+                  <Text style={styles.label}>Contraseña</Text>
+                  <View style={styles.passwordInputContainer}>
+                    <Animated.View
+                      style={{
+                        transform: [
+                          {
+                            translateX: passwordShakeAnim.interpolate({
+                              inputRange: [-1, 1],
+                              outputRange: [-3, 3],
+                            }),
+                          },
+                        ],
+                      }}
+                    >
+                      <Input
+                        value={password}
+                        onChangeText={handlePasswordChange}
+                        onBlur={handlePasswordBlur}
+                        secureTextEntry={!showPassword}
+                        placeholder="Ingresa tu contraseña"
+                        containerStyle={
+                          showPasswordError && passwordError
+                            ? {
+                                ...styles.inputContainer,
+                                ...styles.inputError,
+                                ...styles.inputInGlass,
+                              }
+                            : {
+                                ...styles.inputContainer,
+                                ...styles.inputInGlass,
+                              }
+                        }
+                      />
+                    </Animated.View>
+                    <Pressable
+                      style={styles.passwordToggle}
+                      onPress={handlePasswordToggle}
+                      accessibilityRole="button"
+                      accessibilityLabel={
+                        showPassword
+                          ? "Ocultar contraseña"
+                          : "Mostrar contraseña"
+                      }
+                    >
+                      <Animated.Text
+                        style={{
+                          color: colors.neutral400,
+                          fontWeight: "600",
+                          transform: [{ scale: eyeScaleAnim }],
+                        }}
+                      >
+                        {showPassword ? "Ocultar" : "Mostrar"}
+                      </Animated.Text>
+                    </Pressable>
+                  </View>
+                  {showPasswordError && passwordError && (
+                    <Animated.View
+                      style={[
+                        styles.errorContainer,
+                        {
+                          opacity: passwordErrorAnim,
+                          transform: [
+                            {
+                              translateY: passwordErrorAnim.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [-10, 0],
+                              }),
+                            },
+                          ],
+                        },
+                      ]}
+                    >
+                      <Text style={styles.errorText}>{passwordError}</Text>
+                    </Animated.View>
+                  )}
+                </View>
+              </GlassCard>
+            </Animated.View>
 
             <Pressable style={styles.forgotPasswordContainer}>
               <Typo size={14} color={colors.primary} fontWeight="600">
@@ -494,19 +639,14 @@ const Login = () => {
               },
             ]}
           >
-            <View style={styles.cardHeader}>
-              <Icons.UserPlusIcon
-                size={verticalScale(20)}
-                color={colors.primary}
-                weight="bold"
-              />
+            <View style={styles.cardHeaderNoIcon}>
               <Typo
                 size={16}
                 fontWeight="700"
                 color={colors.textPrimary}
                 style={styles.cardTitle}
               >
-                ¿Nuevo en Ahorrapp?
+                ¿Nuevo en AhorrApp?
               </Typo>
             </View>
             <Typo
@@ -523,14 +663,18 @@ const Login = () => {
               <Typo size={15} fontWeight="600" color={colors.primary}>
                 Crear cuenta gratuita
               </Typo>
-              <Icons.ArrowRightIcon
-                size={verticalScale(16)}
-                color={colors.primary}
-                weight="bold"
-              />
             </Pressable>
           </Animated.View>
         </Animated.View>
+
+        {isLoading && (
+          <View style={styles.loadingOverlay} pointerEvents="none">
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator color={colors.black} />
+              <Text style={styles.loadingText}>Iniciando sesión…</Text>
+            </View>
+          </View>
+        )}
       </View>
     </ScreenWrapper>
   );
@@ -556,23 +700,26 @@ const styles = StyleSheet.create({
     marginBottom: spacingY._35,
   },
   logoContainer: {
-    width: verticalScale(70),
-    height: verticalScale(70),
-    borderRadius: verticalScale(35),
-    backgroundColor: `${colors.primary}08`,
-    borderWidth: 2,
-    borderColor: `${colors.primary}20`,
+    paddingVertical: spacingY._15,
+    paddingHorizontal: spacingX._25,
+    borderRadius: verticalScale(24),
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.1)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: spacingY._15,
-    shadowColor: colors.primary,
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
+    elevation: 6,
+  },
+  brandText: {
+    fontSize: verticalScale(32),
+    fontWeight: "900",
+    color: colors.primary,
+    letterSpacing: -0.5,
   },
   title: {
     marginBottom: spacingY._5,
@@ -584,30 +731,27 @@ const styles = StyleSheet.create({
     lineHeight: verticalScale(22),
   },
   form: {
-    marginBottom: spacingY._25,
-  },
-  inputGroup: {
     marginBottom: spacingY._20,
   },
+  inputGroup: {
+    marginBottom: spacingY._15,
+  },
   label: {
-    fontSize: verticalScale(14),
+    fontSize: verticalScale(13),
     fontWeight: "600",
     color: colors.textLight,
-    marginBottom: spacingY._8,
+    marginBottom: spacingY._7,
   },
   inputContainer: {
-    backgroundColor: colors.neutral800,
-    borderColor: colors.neutral600,
-    borderWidth: 1,
-    borderRadius: verticalScale(14),
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    backgroundColor: "transparent",
+    borderColor: "transparent",
+    borderWidth: 0,
+    borderRadius: verticalScale(12),
+  },
+  inputInGlass: {
+    backgroundColor: "transparent",
+    borderWidth: 0,
+    paddingHorizontal: spacingX._8,
   },
   inputError: {
     borderColor: colors.error,
@@ -620,11 +764,12 @@ const styles = StyleSheet.create({
   },
   passwordToggle: {
     position: "absolute",
-    right: spacingX._15,
+    right: spacingX._12,
     top: "50%",
-    transform: [{ translateY: -verticalScale(12) }],
-    padding: spacingX._8,
+    transform: [{ translateY: -verticalScale(10) }],
+    padding: spacingX._5,
     borderRadius: verticalScale(6),
+    backgroundColor: "transparent",
   },
   errorContainer: {
     flexDirection: "row",
@@ -647,24 +792,24 @@ const styles = StyleSheet.create({
     borderRadius: verticalScale(8),
   },
   loginButton: {
-    height: verticalScale(52),
-    borderRadius: verticalScale(16),
-    marginBottom: spacingY._25,
+    height: verticalScale(46),
+    borderRadius: verticalScale(12),
+    marginBottom: spacingY._20,
     shadowColor: colors.primary,
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 2,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    elevation: 4,
   },
   registerCard: {
-    backgroundColor: colors.neutral850,
-    borderRadius: verticalScale(30),
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderRadius: verticalScale(28),
     padding: spacingX._20,
     borderWidth: 1,
-    borderColor: colors.neutral700,
+    borderColor: "rgba(255,255,255,0.12)",
     shadowColor: colors.black,
     shadowOffset: {
       width: 0,
@@ -674,13 +819,18 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 8,
   },
-  cardHeader: {
+  glassCard: {
+    marginBottom: spacingY._10,
+  },
+  inputGroupGlass: {
+    gap: spacingY._7,
+  },
+  cardHeaderNoIcon: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: spacingY._10,
   },
   cardTitle: {
-    marginLeft: spacingX._10,
     flex: 1,
   },
   cardDescription: {
@@ -688,14 +838,39 @@ const styles = StyleSheet.create({
     marginBottom: spacingY._15,
   },
   registerButton: {
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     backgroundColor: `${colors.primary}10`,
     paddingVertical: spacingY._12,
     paddingHorizontal: spacingX._16,
     borderRadius: verticalScale(12),
     borderWidth: 1,
     borderColor: `${colors.primary}20`,
+  },
+  shimmerBar: {
+    position: "absolute",
+    top: -verticalScale(5),
+    bottom: -verticalScale(5),
+    borderRadius: verticalScale(10),
+    opacity: 0.7,
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.25)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingContainer: {
+    backgroundColor: colors.primary,
+    paddingVertical: spacingY._10,
+    paddingHorizontal: spacingX._16,
+    borderRadius: verticalScale(14),
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacingX._10,
+  },
+  loadingText: {
+    color: colors.black,
+    fontWeight: "700",
   },
 });
